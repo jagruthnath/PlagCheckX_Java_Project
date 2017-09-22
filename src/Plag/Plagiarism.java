@@ -8,21 +8,20 @@ import java.util.TreeMap;
 
 import static java.lang.Math.pow;
 
-public class Plagiarism {
-    static ArrayList<String> fname = new ArrayList<String>();
-    static ArrayList<String> fwp = new ArrayList<String>();
-    static int kg=5;
+class Plagiarism {
+    private static ArrayList<String> fname = new ArrayList<>();
+    static ArrayList<String> fwp = new ArrayList<>();
+    private static int kg=5;
     static String directory="",last="";
-    static File[] files = new File(directory).listFiles();
     static int nof=0,size=0;
     static TreeMap<String,Integer> F1=new TreeMap<>();
     static TreeMap<String,Integer> F2=new TreeMap<>();
     static String html="<style>table {border-collapse: collapse;width:100%}th, td {padding: 12px;text-align: center;}</style>";
     void file_read()
     {
-        files = new File(directory).listFiles();
-        for (File file : files)
-            if (file.isFile())
+        File[] files = new File(directory).listFiles();
+        for (File file : files != null ? files : new File[0])
+            if (file.isFile() && file.getName().endsWith(".txt"))
             {
                 nof++;
                 fname.add(file.getName());
@@ -73,12 +72,12 @@ public class Plagiarism {
                 content=content.concat(result.toLowerCase());
             size=content.length();
             String[] words=content.split(" ");
-            int i,count=0;
+            int i,count;
             for (i=0;i<words.length;i++)
             {
                 count=0;
-                for (int j=0;j<words.length;j++)
-                    if(words[i].equals(words[j]))
+                for (String word : words)
+                    if (words[i].equals(word))
                         count++;
                 if(count!=0)
                         F.put(words[i],count);
@@ -91,32 +90,42 @@ public class Plagiarism {
         }
     }
 
-static int count=0;
+private static int count=0;
 
     void print_matrix(float p[][])
     {
         if(count==1)
-            html=html.concat("<h1 style='color:red;font-family:Quicksand Bold'> LCS </h1>");
+            html=html.concat("<center><h1 style='color:red;font-family:Quicksand Bold'> LCS </h1></center>");
         else if(count==2)
-            html=html.concat("<h1 style='color:red;font-family:Quicksand Bold'> Fingerprinting </h1>");
+            html=html.concat("<center><h1 style='color:red;font-family:Quicksand Bold'> Fingerprinting </h1></center>");
         else
-            html=html.concat("<h1 style='color:red;font-family:Quicksand Bold'> Bag of Words </h1>");
+            html=html.concat("<center><h1 style='color:red;font-family:Quicksand Bold'> Bag of Words </h1></center>");
         count++;
-        html=html+"<table border=1><tr><th style='color:red;font-family:Quicksand Bold;font-size:20'>FILE</th>";
+        html=html+"<table border=1><tr><th style='font-family:Quicksand Bold;font-size:20'>FILE</th>";
         System.out.print("FILE\t");
         for(int i=0;i<nof;i++) {
-            html=html.concat("<th style='color:red;font-family:Quicksand Bold;font-size:20'>"+fname.get(i)+"</th>");
+            html=html.concat("<th style='font-family:Quicksand Bold;font-size:20'>"+fname.get(i)+"</th>");
             System.out.print(fname.get(i) + "\t");
         }
         html=html.concat("</tr>");
         System.out.println();
         for(int i=0;i<nof;i++)
         {
-            html=html.concat("<tr><th style='color:red;font-family:Quicksand Bold;font-size:20'>"+fname.get(i)+"</th>");
+            html=html.concat("<tr><th style='font-family:Quicksand Bold;font-size:20'>"+fname.get(i)+"</th>");
             System.out.print(fname.get(i)+"\t");
             for(int j=0;j<nof;j++)
             {
-                html=html.concat("<td style='font-family:Quicksand Book;font-size:18'>"+Float.toString(Math.round(p[i][j]))+"</td>");
+                if (i==j)
+                    html=html.concat("<td style='color:blue;font-family:Quicksand Book;font-size:18'>"+Float.toString(Math.round(p[i][j]))+"</td>");
+                else
+                {
+                    if(Math.round(p[i][j])>60)
+                        html = html.concat("<td style='color:red;font-family:Quicksand Bold;font-size:18'>" + Float.toString(Math.round(p[i][j])) + "</td>");
+                    else if(Math.round(p[i][j])>40)
+                        html = html.concat("<td style='color:#FFAB00;font-family:Quicksand Book;font-size:18'>" + Float.toString(Math.round(p[i][j])) + "</td>");
+                    else
+                        html = html.concat("<td style='color:green;font-family:Quicksand Book;font-size:18'>" + Float.toString(Math.round(p[i][j])) + "</td>");
+                }
                 System.out.printf("%.2f\t",p[i][j]);
             }
             html=html.concat("</tr>");

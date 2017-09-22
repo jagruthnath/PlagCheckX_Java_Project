@@ -14,7 +14,7 @@ public class PlagController {
     public Button Browse,Analyse;
     public TextField filename;
     public WebView webView ;
-    private WebEngine webengine ;
+
     public void initialize() throws IOException
     {
 
@@ -104,6 +104,8 @@ public class PlagController {
                     THA=plagiarism.generate_hash(content1,last1.toCharArray(),hash_table1);
                     THB=plagiarism.generate_hash(content2,last2.toCharArray(),hash_table2);
                     plagx_finger[a][b]=plagx_finger[b][a]=plagiarism.generate_p(hash_table1,hash_table2,THA,THB,small);
+                    if (plagx_finger[a][b]>100)
+                        plagx_finger[a][b]=plagx_finger[b][a]=100;
                 }
                 else{
                     plagx[a][b] = plagx[b][a] = 100;
@@ -122,7 +124,7 @@ public class PlagController {
         System.out.println(" Fingerprinting ");
         plagiarism.print_matrix(plagx_finger);
 
-        this.webengine = this.webView.getEngine();
-        this.webengine.loadContent(Plagiarism.html,"text/html");
+        WebEngine webengine = this.webView.getEngine();
+        webengine.loadContent(Plagiarism.html,"text/html");
     }
 }
