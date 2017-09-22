@@ -70,6 +70,7 @@ public class PlagController {
                     //Bag of Words End
 
                     //LCS Start
+
                     int match=0;
                     for (Map.Entry<String , Integer> e1 : Plagiarism.F1.entrySet())
                     {
